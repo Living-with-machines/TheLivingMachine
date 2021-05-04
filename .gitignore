@@ -130,3 +130,15 @@ dmypy.json
 
 # folders
 data/
+resources/
+models/
+experiments/
+annotations/
+
+*/.DS_Store
+.DS_Store
+processing/jsa_sentences
+code/tools/.DS_Store
+code/tools/__init__.py
+code/tools/.ipynb_checkpoints/
+code/tools/__pycache__/
