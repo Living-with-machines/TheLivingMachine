@@ -3,22 +3,29 @@ import numpy as np
 
 def create_mask_pipeline(epoch, pred_toks):
 
-	path2model = "./models/bert/bert_" + epoch
-	tokenizer = "bert-base-uncased"
+    path2model = "./models/bert/bert_" + epoch
+    tokenizer = "bert-base-uncased"
 
-	# Create a pipeline, see transformers repo for details
-	model_rd = pipeline("fill-mask",
-	                     model=path2model,
-	                     tokenizer=tokenizer,
-	                     top_k=pred_toks)
-	return model_rd
+    # Create a pipeline, see transformers repo for details
+    model_rd = pipeline("fill-mask",
+                         model=path2model,
+                         tokenizer=tokenizer,
+                         top_k=pred_toks)
+    return model_rd
 
 def bert_masking(row, model_rd):
-	masked = []
-	output = model_rd(row["maskedSentence"])
-	for ind_output in output:
-		masked.append((ind_output["token_str"], round(ind_output["score"], 2)))
-	return masked
+    masked = []
+    
+    to_predict = row["prevSentence"] + " " + row["maskedSentence"] + " " + row["nextSentence"]
+    if len(to_predict) >= 512:
+        to_predict = row["prevSentence"] + " " + row["maskedSentence"]
+    if len(to_predict) >= 512:
+        to_predict = row["maskedSentence"]
+    
+    output = model_rd(to_predict)
+    for ind_output in output:
+        masked.append((ind_output["token_str"], round(ind_output["score"], 2)))
+    return masked
 
 def w2v_avg_embedding(ltokens, emb_model):
     doc_embed = []
