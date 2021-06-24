@@ -35,12 +35,13 @@ def filter_sents_query(corpus, query):
     
     query_tokens = dict()
     query_tokens["machine"] = ["machine", "machines"]
+    query_tokens["engine"] = ["engine", "engines"]
 
     metadata_fields = []
     metadata_file = ""
 
     if corpus == "JSA":
-        metadata_fields = ["filename", "journal_id", "journal_title", "publisher_name", "volume", "issue_id", "article_type", "title_group", "date", "contributors", "subjects"]
+        metadata_fields = ["filename", "journal_id", "journal_title", "publisher_name", "volume", "issue_id", "article_type", "title_group", "date", "year", "contributors", "subjects"]
         metadata_file = pd.read_csv("data/" + corpus.lower() + "_processed/" + corpus + "_metadata.tsv", sep="\t", index_col="article_id")
         metadata_file.index = metadata_file.index.astype(str)
     
@@ -63,9 +64,6 @@ def filter_sents_query(corpus, query):
             df_rows.append(list(filemtdt) + [prevSentence, currentSentence, markedSentence, maskedSentence, nextSentence, targetExpression])
 
     df_sentences = pd.DataFrame(df_rows, columns=df_cols)
-
-    df_sentences = df_sentences[df_sentences["maskedSentence"].str.len() < 512]
-    df_sentences = df_sentences[df_sentences["targetExpression"].str.isupper() == False]
 
     return df_sentences
 
@@ -91,7 +89,7 @@ def preprocess_pipe(texts, nlp):
     return preproc_pipe
 
 
-def filter_sents_synt(processed, query):
+def filter_sents_synt(processed, maskedSent, query):
 
     # Because we're not always working with clean data, some times the
     # sentences are not correctly parsed. We minimize this through
@@ -125,6 +123,10 @@ def filter_sents_synt(processed, query):
     # If the query is identifiable, filter in:
     if query_exists == True and verb_exists == True:
         return True
+    
+    # Our BERT is only able to process 512 characters:
+    if len(maskedSent) >= 512:
+        return False
 
     # Otherwise, filter out:
     return False

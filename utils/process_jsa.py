@@ -5,18 +5,20 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 import pandas as pd
 from sentence_splitter import split_text_into_sentences
+from tqdm import tqdm
+tqdm.pandas()
 
 
 # ===================================================
 # Parse metadata
 # ===================================================
 
-def parse_metadata(input_path, jsa_batch):
+def parse_metadata(input_path):
 
     rows = []
 
     re_jsa_id = "j[0-9]+"
-    for i in glob.glob(input_path + "metadata/*"):
+    for i in glob.glob(input_path + "/metadata/*"):
         
         filename = i.split("/")[-1].split(".xml")[0]
         
@@ -38,6 +40,7 @@ def parse_metadata(input_path, jsa_batch):
         date = ""
         contributors = []
         categories = []
+        year = ""
         
         root = ET.parse(i).getroot()
         article_type = root.attrib["article-type"]
@@ -88,11 +91,11 @@ def parse_metadata(input_path, jsa_batch):
                 date = datetime.date(year, month, day)
         rows.append([filename, journal_id, journal_id_text, journal_title, publisher_name,
                      volume, issue, issue_id, article_id, article_type, first_page, last_page, uri,
-                     title_group, date, contributors, categories])
+                     title_group, date, year, contributors, categories])
 
     df = pd.DataFrame(rows, columns=["filename", "journal_id", "journal_id_text", "journal_title", "publisher_name", "volume",
              "issue", "issue_id", "article_id", "article_type", "first_page", "last_page", "uri", "title_group",
-             "date", "contributors", "subjects"])
+             "date", "year", "contributors", "subjects"])
 
     return df
 
@@ -138,13 +141,14 @@ def parse_corpus(input_path, output_path, overwrite):
         content_dfs = []
 
         for jsa_batch in batches:
-            input_path = "../../workspace/data/" + input_path + "/"
+            input_path = "../../workspace/data/" + jsa_batch
 
             # Process metadata into a dataframe:
-            metadata_tmp_df = parse_metadata(input_path, jsa_batch)
+            metadata_tmp_df = parse_metadata(input_path)
 
             # Process the plain text:
             content_tmp_df = metadata_tmp_df.copy()
+            
             content_tmp_df['sentences'] = content_tmp_df.progress_apply(lambda x: parse_fulltext(x["filename"], input_path),axis=1)
 
             metadata_dfs.append(metadata_tmp_df)
