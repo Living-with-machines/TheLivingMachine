@@ -95,6 +95,11 @@ def filter_sents_synt(processed, maskedSent, query):
     # sentences are not correctly parsed. We minimize this through
     # the following steps, which we apply to all datasets.
 
+    # Our BERT is only able to process 512 characters. Any sentence
+    # longer than that is filtered out:
+    if len(maskedSent) >= 512:
+        return False
+
     query_exists = False
     verb_exists = False
 
@@ -123,10 +128,6 @@ def filter_sents_synt(processed, maskedSent, query):
     # If the query is identifiable, filter in:
     if query_exists == True and verb_exists == True:
         return True
-    
-    # Our BERT is only able to process 512 characters:
-    if len(maskedSent) >= 512:
-        return False
 
     # Otherwise, filter out:
     return False

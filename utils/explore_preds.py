@@ -16,12 +16,18 @@ def create_mask_pipeline(epoch, pred_toks):
 def bert_masking(row, model_rd):
     masked = []
     
-    to_predict = row["prevSentence"] + " " + row["maskedSentence"] + " " + row["nextSentence"]
+    prevSentence = ""
+    nextSentence = ""
+    if type(row["prevSentence"]) == str:
+        prevSentence = row["prevSentence"]
+    if type(row["nextSentence"]) == str:
+        nextSentence = row["nextSentence"]
+    to_predict = prevSentence + " " + row["maskedSentence"] + " " + nextSentence
     if len(to_predict) >= 512:
-        to_predict = row["prevSentence"] + " " + row["maskedSentence"]
+        to_predict = prevSentence + " " + row["maskedSentence"]
     if len(to_predict) >= 512:
         to_predict = row["maskedSentence"]
-    
+
     output = model_rd(to_predict)
     for ind_output in output:
         masked.append((ind_output["token_str"], round(ind_output["score"], 2)))
