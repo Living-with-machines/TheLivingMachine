@@ -110,7 +110,8 @@ def parse_fulltext(fulltext_path, input_path):
     sentences = []
     if Path(fulltext_path).exists():
         with open(fulltext_path) as fr:
-            re_pageheader = r".*\, [A-Z][A-Za-z]+ [0-9]{1,2}\, [0-9]{4}\.? ?[0-9]*"
+            re_pageseq = r"\<page sequence\=\"([0-9]+)\"\>"
+            re_pageheader = r"([A-Z 0-9\,\.]+[A-Z0-9]{2,}\b[\,\.\;]?)"
             fulltext = fr.read()
             fulltext = fulltext.split("<plain_text>")[1]
             fulltext = fulltext.split("</plain_text>")[0]
@@ -118,9 +119,10 @@ def parse_fulltext(fulltext_path, input_path):
             fulltext = [x for x in fulltext if x]
             text = ""
             for pageseq in fulltext:
-                pageseq_num = re.match("\<page sequence\=\"([0-9]+)\"\>", pageseq).group(1)
-                pageseq = re.sub("\<page sequence\=\"([0-9]+)\"\>", "", pageseq).strip()
-                pageseq = re.sub(re_pageheader, "", pageseq).strip()
+                if re.match(re_pageseq + re_pageheader, pageseq):
+                    pageseq = re.sub(re_pageseq + re_pageheader, "", pageseq).strip()
+                elif re.match(re_pageseq, pageseq):
+                    pageseq = re.sub(re_pageseq, "", pageseq).strip()
                 text += " " + pageseq
             sentences = split_text_into_sentences(text=text, language='en')
     return sentences
@@ -131,7 +133,7 @@ def parse_fulltext(fulltext_path, input_path):
 # ===================================================
 
 def parse_corpus(input_path, output_path, overwrite):
-    batches = ["JSA_before1854", "JSA_1854-1908"]
+    batches = ["JSA_1783-1843", "JSA_1854-1908"]
 
     if not Path(output_path + "JSA_content").is_dir() or overwrite == True:
 
@@ -141,7 +143,7 @@ def parse_corpus(input_path, output_path, overwrite):
         content_dfs = []
 
         for jsa_batch in batches:
-            input_path = "../../workspace/data/" + jsa_batch
+            input_path = "../../workspace/data/JSA/" + jsa_batch
 
             # Process metadata into a dataframe:
             metadata_tmp_df = parse_metadata(input_path)
