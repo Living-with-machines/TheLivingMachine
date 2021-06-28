@@ -109,12 +109,12 @@ def filter_sents_synt(processed, maskedSent, query):
         if t[0] == query:
             query_exists = True
 
-        # If the query is not a noun, filter out: ### ADAPT IF THIS CHANGES
+        # If the query is not a noun, filter out:
         if t[0] == query and t[1] != "NOUN":
             return False
 
         # The query is identifiable:
-        if t[1] == "VERB":
+        if t[1] == "VERB" or t[1] == "AUX":
             verb_exists = True
 
         # If the root is not a verb (or aux), filter out:
