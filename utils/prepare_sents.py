@@ -1,3 +1,4 @@
+from langdetect import detect
 import pandas as pd
 import glob
 import re
@@ -71,6 +72,10 @@ def filter_sents_query(corpus, query):
 # ===============================
 # Syntactic parsing and filtering
 
+def remove_punctspaces(text):
+    # Remove spaces before punctuation:
+    return re.sub(r'\s([?.,;!](?:\s|$))', r'\1', text)
+
 def parse_pipe(doc):
     lemma_list = [(
         tok.text, # Text form
@@ -89,11 +94,15 @@ def preprocess_pipe(texts, nlp):
     return preproc_pipe
 
 
-def filter_sents_synt(processed, maskedSent, query):
+def filter_sents_synt(processed, maskedSent, currentSent, query):
 
     # Because we're not always working with clean data, some times the
     # sentences are not correctly parsed. We minimize this through
     # the following steps, which we apply to all datasets.
+    
+    # Filter out sentences not identified as being in English: 
+    if detect(currentSent) != "en":
+        return False
 
     # Our BERT is only able to process 512 characters. Any sentence
     # longer than that is filtered out:
@@ -101,7 +110,7 @@ def filter_sents_synt(processed, maskedSent, query):
         return False
 
     query_exists = False
-    verb_exists = False
+    verb_is_root = False
 
     for t in processed:
 
@@ -109,24 +118,20 @@ def filter_sents_synt(processed, maskedSent, query):
         if t[0] == query:
             query_exists = True
 
-        # If the query is not a noun, filter out:
+        # If the query is not a noun, filter out: ### ADAPT IF THIS CHANGES
         if t[0] == query and t[1] != "NOUN":
             return False
 
         # The query is identifiable:
-        if t[1] == "VERB" or t[1] == "AUX":
-            verb_exists = True
-
-        # If the root is not a verb (or aux), filter out:
-        if t[2] == "ROOT" and t[1] not in ["VERB", "AUX"]:
-            return False
+        if (t[1] == "VERB" or t[1] == "AUX") and t[2] == "ROOT":
+            verb_is_root = True
 
         # If the query is the root, filter out:
         if t[2] == "ROOT" and t[0] == query:
             return False
 
     # If the query is identifiable, filter in:
-    if query_exists == True and verb_exists == True:
+    if query_exists == True and verb_is_root == True:
         return True
 
     # Otherwise, filter out:

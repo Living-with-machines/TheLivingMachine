@@ -92,8 +92,9 @@ print("Linguistic filtering")
 for dataset in ["jsa", "rsc", "hmd", "blb"]:
     print("*", dataset)
     syndf = pd.read_csv("data/" + dataset + "_processed/" + dataset.upper() + "_" + query + ".tsv", sep="\t")
+    syndf['currentSentence'] = syndf.apply(lambda x: prepare_sents.remove_punctspaces(x["currentSentence"]), axis=1)
     syndf['synt'] = prepare_sents.preprocess_pipe(syndf['currentSentence'], nlp)
-    syndf = syndf[syndf.apply(lambda x: prepare_sents.filter_sents_synt(x.synt, x.maskedSentence, x.targetExpression), axis=1)]
+    syndf = syndf[syndf.apply(lambda x: prepare_sents.filter_sents_synt(x.synt, x.maskedSentence, x.currentSentence, x.targetExpression), axis=1)]
     syndf["query_label"] = syndf.apply(lambda x: prepare_sents.find_query_deplabel(x.synt, x.maskedSentence, x.targetExpression), axis=1)
     syndf.to_pickle("data/" + dataset + "_processed/" + dataset.upper() + "_" + query + "_synparsed.pkl")
 
