@@ -118,11 +118,11 @@ def filter_sents_synt(processed, maskedSent, currentSent, query):
         if t[0] == query:
             query_exists = True
 
-        # If the query is not a noun, filter out: ### ADAPT IF THIS CHANGES
+        # If the query is not a noun, filter out:
         if t[0] == query and t[1] != "NOUN":
             return False
 
-        # The query is identifiable:
+        # There is a verb (or auxiliary) that is a root in the sentence:
         if (t[1] == "VERB" or t[1] == "AUX") and t[2] == "ROOT":
             verb_is_root = True
 
@@ -130,7 +130,8 @@ def filter_sents_synt(processed, maskedSent, currentSent, query):
         if t[2] == "ROOT" and t[0] == query:
             return False
 
-    # If the query is identifiable, filter in:
+    # If both the query is identifiable and there is a verb (or auxiliary)
+    # that is a root in the sentence, we keep this sentence:
     if query_exists == True and verb_is_root == True:
         return True
 
