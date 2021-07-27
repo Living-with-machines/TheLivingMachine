@@ -38,7 +38,10 @@ def read_metadata(f):
     mtdt_df["publication_code"] = mtdt_df["publication_code"].astype(int)
     return mtdt_df
 
-def process_content(i, query, hmd_metadata_df):
+def process_content(i, query_tokens, hmd_metadata_df):
+    
+    query_tokens = [r"\b" + x + r"\b" for x in query_tokens]
+    query_tokens = '|'.join(query_tokens)
     
     # Read csv with sentences:
     one_publ = pd.read_csv(i)
@@ -56,7 +59,8 @@ def process_content(i, query, hmd_metadata_df):
 
     # Rename columns to match other datasets:
     one_publ = one_publ.rename(columns = {"hits": "targetExpression", "prev_sentence": "prevSentence",
-                                          "target_sentence": "currentSentence", "next_sentence": "nextSentence"})
+                                          "target_sentence": "currentSentence", "next_sentence": "nextSentence",
+                                          "previous_sentence": "prevSentence"})
 
     # Mark and mask the target expression in the current sentence:
     one_publ[["markedSentence", "maskedSentence"]] = one_publ.apply(lambda x: pd.Series(mask_target(x.targetExpression, x.currentSentence)), axis=1)
@@ -76,6 +80,6 @@ def process_content(i, query, hmd_metadata_df):
     one_publ = one_publ.drop_duplicates(subset=["issue_code", "publication_code", "currentSentence", "targetExpression"])
 
     # Filter by targetExpression/query:
-    one_publ = one_publ[one_publ["targetExpression"].str.contains(query, flags=re.IGNORECASE)]
+    one_publ = one_publ[one_publ["targetExpression"].str.contains(query_tokens, flags=re.IGNORECASE)]
     
     return one_publ

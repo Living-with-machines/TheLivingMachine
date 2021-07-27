@@ -32,6 +32,7 @@ def read_metadata(f):
     return blb_mtdt
 
 def mask_target(match, currentSentence):
+
     # Mark the target expression in the sentence:
     markedSentence = re.sub(r"\b%s\b" % match, "$***" + match + "***$", currentSentence, 1, flags=re.IGNORECASE)
     
@@ -40,7 +41,10 @@ def mask_target(match, currentSentence):
     maskedSentence = re.sub(" +", " ", maskedSentence)
     return markedSentence, maskedSentence
 
-def process_content(i, query, blb_metadata_df):
+def process_content(i, query_tokens, blb_metadata_df):
+    
+    query_tokens = [r"\b" + x + r"\b" for x in query_tokens]
+    query_tokens = '|'.join(query_tokens)
     
     # Read csv with sentences:
     one_publ = pd.read_csv(i)
@@ -57,7 +61,7 @@ def process_content(i, query, blb_metadata_df):
                                           "target_sentence": "currentSentence", "next_sentence": "nextSentence"})
 
     # Filter by targetExpression/query:
-    one_publ = one_publ[one_publ["targetExpression"].str.contains(query, flags=re.IGNORECASE)]
+    one_publ = one_publ[one_publ["targetExpression"].str.contains(query_tokens, flags=re.IGNORECASE)]
 
     # Mark and mask the target expression in the current sentence:
     one_publ[["markedSentence", "maskedSentence"]] = one_publ.apply(lambda x: pd.Series(mask_target(x.targetExpression, x.currentSentence)), axis=1)

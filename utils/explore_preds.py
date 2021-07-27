@@ -4,10 +4,15 @@ import numpy as np
 def create_mask_pipeline(epoch, pred_toks):
 
     path2model = "./models/bert/bert_" + epoch
-    tokenizer = "bert-base-uncased"
-
-    # Create a pipeline, see transformers repo for details
-    model_rd = pipeline("fill-mask",
+    if epoch == "contemporary":
+        path2model = "bert-base-uncased"
+        model_rd = pipeline("fill-mask",
+                            model=path2model,
+                            top_k=pred_toks)
+    else:
+        tokenizer = "bert-base-uncased"
+        # Create a pipeline, see transformers repo for details
+        model_rd = pipeline("fill-mask",
                          model=path2model,
                          tokenizer=tokenizer,
                          top_k=pred_toks)

@@ -32,11 +32,9 @@ def process_content(query_tokens, txtf):
     return lSentenceTuples
 
 
-def filter_sents_query(corpus, query):
+def filter_sents_query(corpus, query_tokens):
     
-    query_tokens = dict()
-    query_tokens["machine"] = ["machine", "machines"]
-    query_tokens["engine"] = ["engine", "engines"]
+    query_tokens = [r"\b" + x + r"\b" for x in query_tokens]
 
     metadata_fields = []
     metadata_file = ""
@@ -49,8 +47,6 @@ def filter_sents_query(corpus, query):
     if corpus == "RSC":
         metadata_fields = ["issn", "title", "year", "volume", "journal", "author", "type", "language", "primaryTopic", "secondaryTopic"]
         metadata_file = pd.read_csv("data/rsc_processed/RSC_metadata.tsv", sep="\t", index_col="id")
-
-    query_tokens = [r"\b" + x + r"\b" for x in query_tokens[query]]
 
     df_cols = metadata_fields + ["prevSentence", "currentSentence", "markedSentence", "maskedSentence", "nextSentence", "targetExpression"]
     df_rows = []
