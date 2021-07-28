@@ -142,3 +142,6 @@ code/tools/.DS_Store
 code/tools/__init__.py
 code/tools/.ipynb_checkpoints/
 code/tools/__pycache__/
+p
+r
+predictions/
