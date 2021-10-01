@@ -13,17 +13,17 @@ from utils import prepare_sents
 from utils import explore_preds
 
 # Specify the query tokens here:
-query = "woman"
+query = "artisan"
 min_year = 1783
 max_year = 1908
 
 generic = {"machine": "machine",
            "engine": "machine",
            "child": "human",
-           "artisan": "human",
+           "artisan": "extension",
            "woman": "human",
            "slave": "human",
-           "girl": "girls"}
+           "girl": "extension"}
 
 query_tokens = dict()
 query_tokens["machine"] = ["machine", "machines"]
@@ -89,7 +89,6 @@ hmd_main_df.to_csv("data/hmd_processed/HMD_" + query + ".tsv", sep="\t", index=F
 
 #### ----------------------------------
 #### Process the BLBooks corpus
-
 print("Process the BLB corpus")
 
 blb_metadata_df = process_blbooks.read_metadata("data/blb_processed/book_data.json") # File provided by Kaspar
@@ -148,7 +147,5 @@ for dataset in ["data/rsc_processed/RSC_" + query + "_synparsed.pkl",
 
             # Use BERT to find most likely predictions for a mask:
             pred_df["pred_bert_" + epoch] = pred_df.apply(lambda x: explore_preds.bert_masking(x, model_rd), axis=1)
-            
-            # pred_df.to_pickle(dataset.split(".pkl")[0] + "_" + epoch + "_pred_bert.pkl")
 
         pred_df.to_pickle(dataset.split(".pkl")[0] + "_pred_bert.pkl")
