@@ -1,4 +1,4 @@
-# BERTMachine
+# The Living Machine
 
 This repository has the code for the experiments used for the paper 'The Living Machine'
 
