@@ -1,6 +1,6 @@
 # BERTMachine
 
-This repository has the code for the experiments for Living Machines.
+This repository has the code for the experiments used for the paper 'The Living Machine'
 
 ## Code
 
