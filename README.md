@@ -1,6 +1,6 @@
 # The Living Machine
 
-This repository has the code for the experiments used for the paper 'The Living Machine'
+This repository contains the code for the experiments used for the paper 'The Living Machine', currently under review. Contact @dcsw2 for info.
 
 ## Code
 
