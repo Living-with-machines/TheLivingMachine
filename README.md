@@ -12,18 +12,18 @@ This article examines a long-standing question in the history of technology conc
 ## Installation
 Run the following commands:
 
-To create an environment `conda create -n py39tlm python=3.9`
+- To create an environment `conda create -n py39tlm python=3.9`
 
-Activate your environment with conda
+- Activate your environment with conda
 `conda activate py39tlm`
 
-To install the requirements
+- To install the requirements
  `pip install -r requirements.txt`
  
-To install Spacy
+- To install Spacy
 `python -m spacy download en_core_web_sm`
 
-To install PyTorch visit https://pytorch.org/ to select the appropriate version for your OS
+- To install PyTorch visit https://pytorch.org/ to select the appropriate version for your OS
  
 
 ## Code
