@@ -1,6 +1,6 @@
 # The Living Machine
 
-This repository contains the code for the experiments used for the paper 'The Living Machine', currently under review. Contact @dcsw2 for info.
+This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press. Contact @dcsw2 for info.
 
 ## Code
 
