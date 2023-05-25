@@ -2,6 +2,18 @@
 
 This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press. Contact @dcsw2 for info.
 
+## Installation
+Run the following commands:
+
+To create an environment `conda create -n py39tlm python=3.9`
+
+Activate your environment with conda
+`conda activate py39tlm`
+
+To install the requirements
+ `pip install -r requirements.txt`
+ 
+
 ## Code
 
 Python script `prepare_datasets.py`:
