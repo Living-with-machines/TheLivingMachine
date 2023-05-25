@@ -1,6 +1,6 @@
 # The Living Machine
 
-This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press with _Technology and Culture_, by Daniel CS Wilson, Mariona Coll Ardanuy, Kaspar Beelen et al. and available Open Access. Contact @dcsw2 for info.
+This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press with _Technology and Culture_, by Daniel CS Wilson, Mariona Coll Ardanuy, Kaspar Beelen et al. and available Open Access from July 2023. Contact @dcsw2 for info.
 
 ### Abstract
 
