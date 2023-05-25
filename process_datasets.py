@@ -51,7 +51,7 @@ for dataset in ["data/jsa_processed/JSA_" + query + "_synparsed.pkl",
 
         # Load dataframe where to apply this:
         pred_df = pd.read_pickle(dataset)
-        for epoch in ["1760_1900", "contemporary"]:
+        for epoch in  ["1760_1850", "1890_1900"]:
 
             print("*", epoch)
 
