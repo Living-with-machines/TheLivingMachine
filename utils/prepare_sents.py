@@ -43,10 +43,6 @@ def filter_sents_query(corpus, query_tokens):
         metadata_fields = ["filename", "journal_id", "journal_title", "publisher_name", "volume", "issue_id", "article_type", "title_group", "date", "year", "contributors", "subjects"]
         metadata_file = pd.read_csv("data/" + corpus.lower() + "_processed/" + corpus + "_metadata.tsv", sep="\t", index_col="article_id")
         metadata_file.index = metadata_file.index.astype(str)
-    
-    if corpus == "RSC":
-        metadata_fields = ["issn", "title", "year", "volume", "journal", "author", "type", "language", "primaryTopic", "secondaryTopic"]
-        metadata_file = pd.read_csv("data/rsc_processed/RSC_metadata.tsv", sep="\t", index_col="id")
 
     df_cols = metadata_fields + ["prevSentence", "currentSentence", "markedSentence", "maskedSentence", "nextSentence", "targetExpression"]
     df_rows = []

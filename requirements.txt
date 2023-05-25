@@ -1,0 +1,7 @@
+langdetect==1.0.9
+numpy==1.24.3
+pandas==2.0.1
+sentence_splitter==1.4
+spacy==3.5.3
+tqdm==4.65.0
+transformers==4.29.2
