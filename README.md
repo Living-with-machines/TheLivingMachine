@@ -1,6 +1,13 @@
 # The Living Machine
 
-This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press with _Technology and Culture_, by Daniel Wilson, Mariona Coll Ardanuy, Kaspar Beelen et al. Contact @dcsw2 for info.
+This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press with _Technology and Culture_, by Daniel CS Wilson, Mariona Coll Ardanuy, Kaspar Beelen et al. and available Open Access. Contact @dcsw2 for info.
+
+### Abstract
+
+This article examines a long-standing question in the history of technology concerning the trope of the living machine. The authors do this by using a cutting-edge computational method, which they apply to large collections of digitized texts. In particular, they demonstrate the affordances of a neural language model for historical research. In a self-conscious maneuver, the authors use a type of model, often portrayed as sentient today, to detect figures of speech in nineteenth- century texts that portrayed machines as self-acting, automatic, or alive. Their method uses a masked language model to detect unusual or surprising turns of phrase, which could not be discovered using simple keyword search. The authors collect and close read such sentences to explore how figurative language produced a context in which humans and machines were conceived as interchangeable in complicated ways. They conclude that, used judiciously, language models have the potential to open new avenues of historical research.
+
+
+
 
 ## Installation
 Run the following commands:
