@@ -34,6 +34,6 @@ Python script `prepare_datasets.py`:
 3. Parses the sentences, finds the syntactic role of the query token, and filters out sentences which do not look like a sentence (e.g. no verb). The output is `data/xxx_processed/XXX_synparsed.pkl`, which has the same structure as the `.tsv` from step 2, with one additional column, which has information on the syntactic role of the query token in the sentence.
 4. Using BERT to predict the most likely word instead of the query word. The output is `data/xxx_processed/XXX_synparsed_pred_bert.pkl`, which is the dataframe from step 3, with two additional columns: one for each model (e.g., limited by date range), with predictions given by the respective models.
 
-Notebook `explore_by_concepts.ipynb` uses aggregated predictions produced by the models to explore the affinity (using word2vec) between the masked expression and one of a number of concepts of historical interest.
+Notebook `explore_by_concept.ipynb` uses aggregated predictions produced by the models to explore the affinity (using word2vec) between the masked expression and one of a number of concepts of historical interest.
 
 Notebook `explore_data.ipynb` provides stats about the datasets more generally (number of sentences per dataset, etc).
