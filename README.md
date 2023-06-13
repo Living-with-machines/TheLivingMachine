@@ -10,8 +10,13 @@ This article examines a long-standing question in the history of technology conc
 
 
 ## Installation
-Run the following commands:
 
+- Clone this Repository to your local machine with one of the methods using the `code` button, above.
+- Navigate to this directory in your Terminal using `cd` TheLivingMachine
+
+Ensure you have Anaconda installed (https://docs.anaconda.com/anaconda/install/)
+
+Then, run the following commands:
 - To create an environment `conda create -n py39tlm python=3.9`
 
 - Activate your environment with conda
