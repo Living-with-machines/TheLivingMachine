@@ -29,6 +29,7 @@ Then, run the following commands:
 `python -m spacy download en_core_web_sm`
 
 - To install PyTorch visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
+- You should then be able to run the Jupyter Notebooks provided in the repository using `jupyter notebook`.
  
 
 ## Code
