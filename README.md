@@ -25,7 +25,7 @@ Then, run the following commands:
 - To install the requirements
  `pip install -r requirements.txt`
  
-- To install Spacy
+- To download the Spacy pipeline we use
 `python -m spacy download en_core_web_sm`
 
 - To install PyTorch visit https://pytorch.org/ to select the appropriate version for your OS
