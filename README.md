@@ -28,6 +28,9 @@ Then, run the following commands:
 - To download the Spacy pipeline we use
 `python -m spacy download en_core_web_sm`
 
+- To download iPykernel use
+  `conda install -c anaconda ipykernel`
+
 - To install PyTorch visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
 - You should then be able to run the Jupyter Notebooks provided in the repository using `jupyter notebook`.
  
