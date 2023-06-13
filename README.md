@@ -14,7 +14,9 @@ This article examines a long-standing question in the history of technology conc
 - Clone this Repository to your local machine with one of the methods using the `code` button, above.
 - Navigate to this directory in your Terminal using `cd` TheLivingMachine
 
-Ensure you have Anaconda installed (https://docs.anaconda.com/anaconda/install/)
+- To install PyTorch visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
+
+- Ensure you have Anaconda installed (https://docs.anaconda.com/anaconda/install/)
 
 Then, run the following commands:
 - To create an environment `conda create -n py39tlm python=3.9`
@@ -31,7 +33,9 @@ Then, run the following commands:
 - To download iPykernel use
   `conda install -c anaconda ipykernel`
 
-- To install PyTorch visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
+- To enable the kernel on Jupyter Notebooks
+  `python -m ipykernel install --user --name py39tlm --display-name "Python (py39tlm)"`
+
 - You should then be able to run the Jupyter Notebooks provided in the repository using `jupyter notebook`.
  
 
