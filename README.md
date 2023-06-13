@@ -28,7 +28,7 @@ Then, run the following commands:
 - To download the Spacy pipeline we use
 `python -m spacy download en_core_web_sm`
 
-- To install PyTorch visit https://pytorch.org/ to select the appropriate version for your OS
+- To install PyTorch visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
  
 
 ## Code
