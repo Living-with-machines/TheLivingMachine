@@ -14,8 +14,6 @@ This article examines a long-standing question in the history of technology conc
 - Clone this Repository to your local machine with one of the methods using the `code` button, above.
 - Navigate to this directory in your Terminal using `cd` TheLivingMachine
 
-- To install PyTorch visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
-
 - Ensure you have Anaconda installed (https://docs.anaconda.com/anaconda/install/)
 
 Then, run the following commands:
@@ -23,6 +21,9 @@ Then, run the following commands:
 
 - Activate your environment with conda
 `conda activate py39tlm`
+
+- Install PyTorch within this environment, visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
+
 
 - To install the requirements
  `pip install -r requirements.txt`
