@@ -6,33 +6,22 @@ import glob
 nlp = spacy.load('en_core_web_sm', disable=['ner'])
 
 from utils import process_jsa
-from utils import process_rsc
 from utils import process_hmd
 from utils import process_blbooks
 from utils import prepare_sents
-from utils import explore_preds
 
-# Specify the query tokens here:
-query = "artisan"
+# Specify the query tokens here. Change the query to see the results for a different
+# target word:
+query = "machine" 
 min_year = 1783
 max_year = 1908
 
-generic = {"machine": "machine",
-           "engine": "machine",
-           "child": "human",
-           "artisan": "extension",
-           "woman": "human",
-           "slave": "human",
-           "girl": "extension"}
+# This dictionary maps the query to the name that will be displayed in the output file.
+generic = {"machine": "machine"}
 
+# This dictionary maps the query to the tokens it will be expanded to.
 query_tokens = dict()
 query_tokens["machine"] = ["machine", "machines"]
-query_tokens["engine"] = ["engine", "engines"]
-query_tokens["child"] = ["boy", "boys"]
-query_tokens["girl"] = ["girl", "girls"]
-query_tokens["artisan"] = ["artisan", "artesan", "artizan", "artezan", "artisans", "artesans", "artizans", "artezans"]
-query_tokens["woman"] = ["woman", "women"]
-query_tokens["slave"] = ["slave", "slaves"]
 
 #### ----------------------------------
 #### Process the JSA corpus
@@ -49,28 +38,6 @@ process_jsa.parse_corpus(input_path, output_path, overwrite)
 jsa_sents_df = prepare_sents.filter_sents_query("JSA", query_tokens[query])
 jsa_sents_df = jsa_sents_df[(jsa_sents_df["year"] >= min_year) & (jsa_sents_df["year"] <= max_year)]
 jsa_sents_df.to_csv("data/jsa_processed/JSA_" + query + ".tsv", sep="\t", index=False)
-
-#### ----------------------------------
-#### Process the RSC corpus
-
-# Data downloaded from https://fedora.clarin-d.uni-saarland.de/rsc_v6/access.html#download.
-
-# We are using:
-# * TEI-formatted corpus [v6.0.4](https://fedora.clarin-d.uni-saarland.de/rsc_v6/data/texts/Royal_Society_Corpus_open_v6.0.4_texts_tei.zip) (as separate files).
-# * Corresponding metadata [v6.0.4](https://fedora.clarin-d.uni-saarland.de/rsc_v6/data/Royal_Society_Corpus_open_v6.0.4_meta.tsv.zip).
-
-print("Process the RSC corpus")
-
-input_path = "../../workspace/data/RSC/" # Path where RSC data is located
-output_path = "data/rsc_processed/"
-overwrite = False # If False, run the code only if output has not been created.
-                  # If True, run the code regardless.
-
-process_rsc.parse_corpus(input_path, output_path, overwrite)
-
-rsc_sents_df = prepare_sents.filter_sents_query("RSC", query_tokens[query])
-rsc_sents_df = rsc_sents_df[(rsc_sents_df["year"] >= min_year) & (rsc_sents_df["year"] <= max_year)]
-rsc_sents_df.to_csv("data/rsc_processed/RSC_" + query + ".tsv", sep="\t", index=False)
 
 #### ----------------------------------
 #### Process the HMD dataset
@@ -99,53 +66,3 @@ blb_main_df = blb_main_df[blb_main_df["date"].str.isnumeric()]
 blb_main_df = blb_main_df[(blb_main_df["date"].astype(int) >= 1783) & (blb_main_df["date"].astype(int) <= 1908)]
 
 blb_main_df.to_csv("data/blb_processed/BLB_" + query + ".tsv", sep="\t", index=False)
-
-#### ----------------------------------
-#### Linguistic filtering
-
-print("Linguistic filtering")
-
-for dataset in ["jsa", "rsc", "hmd", "blb"]:
-    print("*", dataset)
-    syndf = pd.read_csv("data/" + dataset + "_processed/" + dataset.upper() + "_" + query + ".tsv", sep="\t")
-    # If we have more than 100000 sentences, downsample to 100000:
-    if query != "machine" and syndf.shape[0] > 65000:
-        syndf = syndf.sample(n=65000, random_state=42)
-    # Get a sentence ID
-    syndf['sentId'] = list(syndf.index.values)
-    # Process and filter sentences through syntactic parsing:
-    syndf['currentSentence'] = syndf.apply(lambda x: prepare_sents.remove_punctspaces(x["currentSentence"]), axis=1)
-    syndf['synt'] = prepare_sents.preprocess_pipe(syndf['currentSentence'], nlp)
-    syndf = syndf[syndf.apply(lambda x: prepare_sents.filter_sents_synt(x.synt, x.maskedSentence, x.currentSentence, x.targetExpression), axis=1)]
-    syndf["query_label"] = syndf.apply(lambda x: prepare_sents.find_query_deplabel(x.synt, x.maskedSentence, x.targetExpression), axis=1)
-    syndf.to_pickle("data/" + dataset + "_processed/" + dataset.upper() + "_" + query + "_synparsed.pkl")
-
-#### ----------------------------------
-#### BERT masking
-
-print("BERT masking")
-
-for dataset in ["data/rsc_processed/RSC_" + query + "_synparsed.pkl",
-                "data/jsa_processed/JSA_" + query + "_synparsed.pkl",
-                "data/hmd_processed/HMD_" + query + "_synparsed.pkl",
-                "data/blb_processed/BLB_" + query + "_synparsed.pkl"]:
-    
-    if not Path(dataset.split(".pkl")[0] + "_pred_bert.pkl").is_file():
-        
-        print(dataset)
-
-        # Load dataframe where to apply this:
-        pred_df = pd.read_pickle(dataset)
-        for epoch in ["1760_1900", "contemporary"]:
-
-            print("*", epoch)
-
-            # Create pipeline depending on the BERT model of the specified period
-            # and the number of expected predictions:
-            pred_toks = 20
-            model_rd = explore_preds.create_mask_pipeline(epoch, pred_toks)
-
-            # Use BERT to find most likely predictions for a mask:
-            pred_df["pred_bert_" + epoch] = pred_df.apply(lambda x: explore_preds.bert_masking(x, model_rd), axis=1)
-
-        pred_df.to_pickle(dataset.split(".pkl")[0] + "_pred_bert.pkl")

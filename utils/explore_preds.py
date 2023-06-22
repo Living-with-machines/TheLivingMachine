@@ -3,7 +3,7 @@ import numpy as np
 
 def create_mask_pipeline(epoch, pred_toks):
 
-    path2model = "./models/bert/bert_" + epoch
+    path2model = "khosseini/bert_" + epoch
     if epoch == "contemporary":
         path2model = "bert-base-uncased"
         model_rd = pipeline("fill-mask",
