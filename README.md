@@ -22,17 +22,11 @@ Then, run the following commands:
 - Activate your environment with conda
 `conda activate py39tlm`
 
-- Install PyTorch within this environment, visit (https://pytorch.org/get-started/locally/) to select the appropriate version for your OS.
-
-
 - To install the requirements
  `pip install -r requirements.txt`
  
 - To download the Spacy pipeline we use
 `python -m spacy download en_core_web_sm`
-
-- To download iPykernel use
-  `conda install -c anaconda ipykernel`
 
 - To enable the kernel on Jupyter Notebooks
   `python -m ipykernel install --user --name py39tlm --display-name "Python (py39tlm)"`
