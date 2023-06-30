@@ -49,3 +49,7 @@ Notebook `process_datasets.ipynb`:
 Notebook `explore_by_concept.ipynb` uses aggregated predictions produced by the models to explore the affinity (using word2vec) between the masked expression and one of a number of concepts of historical interest. It produces two files (containing the same data, just in different format): `experiments/xxx_clusters.json` and `experiments/xxx_clusters.tsv`.
 
 Notebook `explore_data.ipynb` provides stats about the datasets more generally (number of sentences per dataset, etc).
+
+R script `machine_attributes_analysis.R` extracts the modifiers of the word _machine_ from the data.
+
+Notebook `machine_attributes_analysis.Rmd` performs the analysis of the modifiers of the word _machine_.
