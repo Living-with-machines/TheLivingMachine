@@ -32,6 +32,8 @@ Then, run the following commands:
   `python -m ipykernel install --user --name py39tlm --display-name "Python (py39tlm)"`
 
 - You should then be able to run the Jupyter Notebooks provided in the repository using `jupyter notebook`.
+
+- If you want to run the explore_by_concepts notebook, you will also need to download our Word2Vec model, for which instructions are provided in the notebook.
  
 
 ## Code
