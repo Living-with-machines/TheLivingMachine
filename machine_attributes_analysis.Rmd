@@ -1,0 +1,318 @@
+---
+title: "Analysis of modifiers of the word machine for project Living Machines 2"
+author: "Barbara McGillivray"
+date: "28 July 2021"
+output: word_document
+---
+
+
+# Initialization
+
+## Load libraries and data, and set initial parameters
+
+Load libraries
+
+```{r message=FALSE}
+op <- options(warn = (-1)) # suppress warnings 
+library(gplots)
+library(ggplot2)
+library(gdata)
+library(stopwords)
+library(tm)
+options(op) # reset the default value
+```
+
+
+Directory names (to be customised):
+  
+```{r Initial parameters}
+path_in =  file.path("/Users", "barbaramcgillivray", "OneDrive - The Alan Turing Institute", "Research", "2021", "LwM", "Living machines2", "Data", fsep = "/")
+path_data = paste(path_in, "older/", sep = "/")
+path_plots = paste(path_in, "plots", sep = "/")
+path_out = file.path("/Users", "barbaramcgillivray", "OneDrive - The Alan Turing Institute", "Research", "2021", "LwM", "Living machines2", "Machine attributes analysis")
+```
+
+Corpus names:
+  
+```{r message=FALSE, warning = FALSE}
+corpora = c("blb", "hmd", "jsa", "rsc")
+```
+
+# Read files
+
+NB: This takes a long time. 
+
+```{r message=FALSE, warning = FALSE, eval=FALSE}
+datasets <- list()
+count = 0
+for (corpus in corpora) {
+  print(corpus)
+  count = count + 1
+  file_name = paste(corpus, "_withmere.tsv", sep = "")
+  dataset = read.csv(paste(path_data, file_name, sep = "/"), header = T, sep = "\t", colClasses=c("synt"="character"))
+  print(dim(dataset))
+  # only keep relevant columns:
+  if (corpus == "blb"){
+    cols = c("identifier", "date", "currentSentence", "synt")
+  }
+  else if (corpus == "hmd"){
+    cols = c("item_code", "year", "currentSentence", "synt")
+  }
+  else if (corpus == "jsa"){
+    cols= c("filename", "year", "currentSentence", "synt")
+  }
+  else {
+    cols= c("volume", "year", "currentSentence", "synt")
+  }
+  dataset = dataset[,cols]
+  if (corpus == "blb"){
+    colnames(dataset)[2] <- "year"
+  }
+  # add to list of datasets:
+  datasets[[count]] = dataset
+}
+```
+
+Overview of the datasets:
+
+```{r}
+for (dataset in datasets){
+  print(names(dataset))
+}
+```
+
+Summaries:
+
+```{r}
+for (dataset in datasets){
+print(summary(dataset$year))
+  hist(dataset$year)
+}
+```
+
+## Extract modifiers of "machine"
+
+
+See machine_attributes_analysis.R.
+
+# BL Books corpus
+
+```{r}
+machine_dep_blb = read.csv(paste(path_out, 'machine_dep_blb.csv', sep = "/"))
+dim(machine_dep_blb)
+```
+
+Summary:
+
+```{r}
+summary(machine_dep_blb)
+```
+
+Distribution over the years:
+
+```{r}
+hist(machine_dep_blb$year, title = "Distribution of years in dataset")
+```
+
+
+Exclude punctuation marks, symbols, determiners, adpositions, conjunctions and unexpected PoS values: 
+
+```{r}
+machine_dep_blb1 = machine_dep_blb[machine_dep_blb$pos != "" & machine_dep_blb$pos != "_" & machine_dep_blb$pos !="-" & machine_dep_blb$pos != "PUNCT" & machine_dep_blb$pos != "SYM" & machine_dep_blb$pos != "DET" & machine_dep_blb$pos != "ADP" & machine_dep_blb$pos != "CCONJ"  & machine_dep_blb$pos != "SCONJ"  & machine_dep_blb$pos != "X" & machine_dep_blb$pos != "PART" & machine_dep_blb$pos != "INTJ"  & machine_dep_blb$pos != "AUX" & !grepl("^[[:digit:]]",machine_dep_blb$pos) & machine_dep_blb$pos !='\"meansa' & machine_dep_blb$pos != "^card",]
+head(machine_dep_blb1)
+```
+
+Part of speech of dependants of "machine":
+
+```{r}
+machine_dep_blb_pos.df = as.data.frame(table(machine_dep_blb1$pos))
+colnames(machine_dep_blb_pos.df) = c("Pos", "Freq")
+machine_dep_blb_pos.df = machine_dep_blb_pos.df[order(-machine_dep_blb_pos.df$Freq),]
+machine_dep_blb_pos.df = machine_dep_blb_pos.df[machine_dep_blb_pos.df$Freq > 0,]
+head(machine_dep_blb_pos.df)
+```
+
+Barplot:
+
+```{r}
+barplot(machine_dep_blb_pos.df$Freq, names.arg = machine_dep_blb_pos.df$Pos, las = 2)
+```
+
+Combine dependants and PoS info:
+
+```{r}
+machine_dep_blb.df = as.data.frame(table(machine_dep_blb1$pos, machine_dep_blb1$dependant))
+```
+
+Exclude punctuation marks, symbols, determiners, adpositions, conjunctions and unexpected PoS values: 
+
+```{r}
+machine_dep_blb_pos_dep = machine_dep_blb.df[machine_dep_blb.df$Freq>0 & machine_dep_blb.df$Var1 != "" & machine_dep_blb.df$Var2 != "" & machine_dep_blb.df$Var1 != "_" & machine_dep_blb.df$Var2 != "_" & machine_dep_blb.df$Var2!="-" & machine_dep_blb.df$Var1 != "PUNCT" & machine_dep_blb.df$Var1 != "SYM" & machine_dep_blb.df$Var1 != "DET" & machine_dep_blb.df$Var1 != "ADP" & machine_dep_blb.df$Var1 != "CCONJ"  & machine_dep_blb.df$Var1 != "SCONJ"  & machine_dep_blb.df$Var1 != "X" & machine_dep_blb.df$Var1 != "PART" & machine_dep_blb.df$Var1 != "INTJ"  & machine_dep_blb.df$Var1 != "AUX" & !grepl("^[[:digit:]]",machine_dep_blb.df$Var1) & machine_dep_blb.df$Var1 !='\"meansa' & machine_dep_blb.df$Var1 != "^card",]
+colnames(machine_dep_blb_pos_dep) = c("PoS", "Dependant", "Freq")
+head(machine_dep_blb_pos_dep)
+```
+
+Sort by PoS and decreasing frequency:
+
+```{r}
+machine_dep_blb_pos_dep = machine_dep_blb_pos_dep[order(machine_dep_blb_pos_dep$PoS, -machine_dep_blb_pos_dep$Freq),]
+head(machine_dep_blb_pos_dep)
+```
+
+Save to file:
+
+```{r}
+write.csv(machine_dep_blb_pos_dep, paste(path_out, paste('machine_dep_blb_pos_dep.csv', sep = ""), sep = "/"), row.names = F)
+```
+
+For each part of speech, I show the top 50 words appearing as dependant of machine:
+
+```{r}
+top_per_pos = vector(mode = "list", length = nrow(unique(machine_dep_blb_pos_dep[c("PoS")])))
+i = 0
+for (pos in unique(machine_dep_blb_pos_dep[[c("PoS")]])){
+  print(pos)
+  i = i + 1
+  this_pos = machine_dep_blb_pos_dep[machine_dep_blb_pos_dep$PoS==pos,c("Dependant")]
+  this_pos = droplevels(this_pos)
+  top_per_pos[[i]] = head(this_pos,50)
+}
+top_per_pos.df = data.frame(top_per_pos)
+colnames(top_per_pos.df) = unique(machine_dep_blb_pos_dep[[c("PoS")]])
+top_per_pos.df
+```
+
+
+Save to file:
+
+```{r}
+write.csv(top_per_pos.df, paste(path_out, paste('top_dependants_per_pos_blb.csv', sep = ""), sep = "/"), row.names = F)
+```
+
+# Other corpora
+
+```{r}
+machine_dep = read.csv(paste(path_out, 'machine_dep.csv', sep = "/"))
+dim(machine_dep)
+```
+
+Summary:
+
+```{r}
+summary(machine_dep)
+```
+
+
+Distribution over the corpora:
+
+```{r}
+table(machine_dep$corpus)
+```
+
+
+Distribution over the years:
+
+```{r}
+hist(machine_dep$year, title = "Distribution of years in dataset")
+ggplot(machine_dep, aes(x = year, fill = corpus)) + 
+  geom_histogram()
+```
+
+I define a function that does the analysis above for each corpus:
+
+```{r}
+extract_machine_dependants <- function(corpus) {
+  print("Loading data...")
+  machine_dep_c = machine_dep[machine_dep$corpus==corpus,]
+
+  #Exclude punctuation marks, symbols, determiners, adpositions, conjunctions and unexpected PoS values: 
+  print("Clean pos...")
+  machine_dep_c1 = machine_dep_c[machine_dep_c$dependant != "" & machine_dep_c$pos != "" & machine_dep_c$pos != "_" & machine_dep_c$pos !="-" & machine_dep_c$pos != "PUNCT" & machine_dep_c$pos != "SYM" & machine_dep_c$pos != "DET" & machine_dep_c$pos != "ADP" & machine_dep_c$pos != "CCONJ"  & machine_dep_c$pos != "SCONJ"  & machine_dep_c$pos != "X" & machine_dep_c$pos != "PART" & machine_dep_c$pos != "INTJ"  & machine_dep_c$pos != "AUX" & !grepl("^[[:digit:]]",machine_dep_c$pos) &  grepl("^[A-Z]+$",machine_dep_c$pos),]
+  
+  #Part of speech of dependants of "machine":
+  print("Table with PoS...")
+machine_dep_c_pos.df = as.data.frame(table(machine_dep_c1$pos))
+colnames(machine_dep_c_pos.df) = c("Pos", "Freq")
+machine_dep_c_pos.df = machine_dep_c_pos.df[order(-machine_dep_c_pos.df$Freq),]
+machine_dep_c_pos.df = machine_dep_c_pos.df[machine_dep_c_pos.df$Freq > 0,]
+
+# barplot:
+print("Barplot...")
+print(paste(path_out,paste("barplot_machine_dep_c_pos_", corpus, ".png", sep = ""), sep = "/"))
+png(paste(path_out,paste("barplot_machine_dep_c_pos_", corpus, ".png", sep = ""), sep = "/")) 
+barplot(machine_dep_c_pos.df$Freq, names.arg = machine_dep_c_pos.df$Pos, las = 2)
+dev.off()
+
+#Combine dependants and PoS info:
+print("Table with dependants and pos...")
+machine_dep_c.df = as.data.frame(table(machine_dep_c1$pos, machine_dep_c1$dependant))
+#Exclude punctuation marks, symbols, determiners, adpositions, conjunctions and unexpected PoS values: 
+machine_dep_c_pos_dep = machine_dep_c.df[machine_dep_c.df$Freq>0 & machine_dep_c.df$Var1 != "" & machine_dep_c.df$Var2 != "" & machine_dep_c.df$Var1 != "_" & machine_dep_c.df$Var2 != "_" & machine_dep_c.df$Var2!="-" & machine_dep_c.df$Var1 != "PUNCT" & machine_dep_c.df$Var1 != "SYM" & machine_dep_c.df$Var1 != "DET" & machine_dep_c.df$Var1 != "ADP" & machine_dep_c.df$Var1 != "CCONJ"  & machine_dep_c.df$Var1 != "SCONJ"  & machine_dep_c.df$Var1 != "X" & machine_dep_c.df$Var1 != "PART" & machine_dep_c.df$Var1 != "INTJ"  & machine_dep_c.df$Var1 != "AUX" & !grepl("^.*[[:digit:]]",machine_dep_c.df$Var1) & machine_dep_c.df$Var1 !='\"meansa' & machine_dep_c.df$Var1 != "^card" & !grepl("^[-;:.].*$",machine_dep_c.df$Var1) & !grepl('^.*\"$',machine_dep_c.df$Var1) & !grepl("^[—].*$",machine_dep_c.df$Var1) ,]
+colnames(machine_dep_c_pos_dep) = c("PoS", "Dependant", "Freq")
+
+#Sort by PoS and decreasing frequency:
+print("Sorting table...")
+machine_dep_c_pos_dep = machine_dep_c_pos_dep[order(machine_dep_c_pos_dep$PoS, -machine_dep_c_pos_dep$Freq),]
+
+#Save to file:
+print("Saving file...")
+write.csv(machine_dep_c_pos_dep, paste(path_out, paste('machine_dep_', corpus, '_pos_dep.csv', sep = ""), sep = "/"), row.names = F)
+
+#For each part of speech, I show the top 50 words appearing as dependant of machine:
+print("Top per pos...")
+top_per_pos = vector(mode = "list", length = nrow(unique(machine_dep_c_pos_dep[c("PoS")])))
+i = 0
+for (pos in unique(machine_dep_c_pos_dep[[c("PoS")]])){
+  print(pos)
+  i = i + 1
+  this_pos = machine_dep_c_pos_dep[machine_dep_c_pos_dep$PoS==pos,c("Dependant")]
+  this_pos = droplevels(this_pos)
+  top_per_pos_i = rep(NA, 50)
+  #top_per_pos[[i]] = head(this_pos,50)
+  top_per_pos_i[1:length(head(this_pos,50))] = head(as.character(this_pos),50)
+  top_per_pos[[i]] = top_per_pos_i
+}
+top_per_pos.df = data.frame(top_per_pos)
+colnames(top_per_pos.df) = unique(machine_dep_c_pos_dep[[c("PoS")]])
+top_per_pos.df
+#Save to file:
+print("Saving file")
+write.csv(top_per_pos.df, paste(path_out, paste('top_dependants_per_pos_', corpus, '.csv', sep = ""), sep = "/"), row.names = F)
+}
+```
+
+Run the function on all corpora:
+
+```{r}
+for (c in corpora){
+  print(c)
+extract_machine_dependants(c)
+}
+```
+
+Now I compare the adjective modifiers of machines across the corpora:
+
+```{r}
+top_per_pos_all_adj = matrix(, nrow = 50, ncol = length(corpora))
+for (i in 1:length(corpora)){
+c = corpora[i]
+top_per_pos = read.csv(paste(path_out,  paste('top_dependants_per_pos_', c, '.csv', sep = ""), sep = "/"))
+top_per_pos_adj = as.character(top_per_pos[,c("ADJ")])
+top_per_pos_all_adj[,i] = top_per_pos_adj
+}
+top_per_pos_all_adj.df = data.frame(top_per_pos_all_adj)
+names(top_per_pos_all_adj.df) = corpora
+top_per_pos_all_adj.df
+print("Saving file")
+write.csv(top_per_pos_all_adj.df, paste(path_out, paste('top_per_pos_all_adj.df.csv', sep = ""), sep = "/"), row.names = F)
+```
+
+
+
+I create a table with the presence of words in each corpus:
+
+```{r}
+data.frame(table(top_per_pos_all_adj.df))
+```
+
+
