@@ -1,6 +1,12 @@
 # The Living Machine
 
-This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', currently in Press with _Technology and Culture_, by Daniel CS Wilson (@dcsw2), Mariona Coll Ardanuy (@mcollardanuy), Kaspar Beelen (@kasparvonbeelen), Barbara McGillivray (@bmcgillivray) & Ruth Ahnert (@ruthahnert) and available Open Access from July 2023. Contact @dcsw2 for info.
+This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', published in volume 64.3 of _Technology and Culture_, by Daniel CS Wilson (@dcsw2), Mariona Coll Ardanuy (@mcollardanuy), Kaspar Beelen (@kasparvonbeelen), Barbara McGillivray (@bmcgillivray) & Ruth Ahnert (@ruthahnert), available Open Access from July 2023. Contact @dcsw2 for info.
+
+Citation:
+
+````Wilson, Daniel C.S., et al. "The Living Machine: A Computational Approach to the Nineteenth-Century Language of Technology." Technology and Culture, vol. 64 no. 3, 2023, p. 875-902.````
+
+[http://doi:10.1353/tech.2023.a903976](https://doi.org/10.1353/tech.2023.a903976)
 
 ### Abstract
 
