@@ -1,5 +1,7 @@
 # The Living Machine
 
+![https://zenodo.org/badge/DOI/10.5281/zenodo.13939398.svg](https://zenodo.org/badge/DOI/10.5281/zenodo.13939398.svg)
+
 This repository contains the code for the experiments used for the paper 'The Living Machine: A Computational Approach to the Nineteenth Century Language of Technology', published in volume 64.3 of _Technology and Culture_, by Daniel CS Wilson (@dcsw2), Mariona Coll Ardanuy (@mcollardanuy), Kaspar Beelen (@kasparvonbeelen), Barbara McGillivray (@bmcgillivray) & Ruth Ahnert (@ruthahnert), available Open Access from July 2023. Contact @dcsw2 for info.
 
 Citation:
