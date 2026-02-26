@@ -46,8 +46,8 @@ Then, run the following commands:
 
 ## Code
 
-Notebooks `[corpusname]_sentences.ipynb':
-These take as input text data from one of the public domain repositories named and pre-process those texts by segmenting them into sentences for analysis in the subsequent notebooks.
+Notebooks `[corpusname]_sentences.ipynb`:
+- These take as input text data from one of the public domain repositories named and pre-process those texts by segmenting them into sentences for analysis in the subsequent notebooks.
 
 Notebook `prepare_datasets.ipynb`:
 1. Processes the different datasets (HMD, JSA, BLB).
