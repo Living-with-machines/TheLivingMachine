@@ -46,6 +46,9 @@ Then, run the following commands:
 
 ## Code
 
+Notebooks `[corpusname]_sentences.ipynb':
+These take as input text data from one of the public domain repositories named and pre-process those texts by segmenting them into sentences for analysis in the subsequent notebooks.
+
 Notebook `prepare_datasets.ipynb`:
 1. Processes the different datasets (HMD, JSA, BLB).
 2. Gets all sentences which contain certain query tokens (machine, machines, etc), in the date range 1783-1908. The output is a `.tsv` file with one sentence per row (and relevant metadata in the other columns), stored as `data/xxx_processed/XXX_machine.tsv`.
